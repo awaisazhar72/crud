@@ -5,11 +5,28 @@ import { Link, useNavigate } from "react-router-dom";
 const Create = () => {
   const [name, setname] = useState("");
   const [email, setemail] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   const history = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (name.trim() === "") {
+      setNameError("Name is required");
+      return;
+    } else {
+      setNameError("");
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setEmailError("Please enter a valid email address");
+      return;
+    } else {
+      setEmailError("");
+    }
 
     console.log("clicked");
     axios
@@ -17,7 +34,6 @@ const Create = () => {
         name: name,
         email: email,
       })
-
       .then(() => {
         history("/read");
       });
@@ -28,7 +44,7 @@ const Create = () => {
       <div className="d-flex justify-content-between m-2">
         <h2>Create</h2>
         <Link to="/read">
-          <button type="button" class="btn btn-primary">
+          <button type="button" className="btn btn-primary">
             Show Data
           </button>
         </Link>
@@ -41,6 +57,7 @@ const Create = () => {
             className="form-control"
             onChange={(e) => setname(e.target.value)}
           />
+          <div className="text-danger">{nameError}</div>
         </div>
 
         <div className="mb-3">
@@ -51,6 +68,7 @@ const Create = () => {
             aria-describedby="emailHelp"
             onChange={(e) => setemail(e.target.value)}
           />
+          <div className="text-danger">{emailError}</div>
         </div>
 
         <button

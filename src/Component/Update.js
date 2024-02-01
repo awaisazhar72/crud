@@ -6,6 +6,8 @@ const Update = () => {
   const [id, setid] = useState(0);
   const [name, setname] = useState("");
   const [email, setemail] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   const navigate = useNavigate();
 
@@ -18,6 +20,21 @@ const Update = () => {
   const handleupdate = (e) => {
     e.preventDefault();
     console.log("id...", id);
+
+    if (name.trim() === "") {
+      setNameError("Name is required");
+      return;
+    } else {
+      setNameError("");
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setEmailError("Please enter a valid email address");
+      return;
+    } else {
+      setEmailError("");
+    }
 
     axios
       .put(`https://65b8f703b71048505a89d875.mockapi.io/crud-operation/${id}`, {
@@ -41,6 +58,7 @@ const Update = () => {
             value={name}
             onChange={(e) => setname(e.target.value)}
           />
+          <div className="text-danger">{nameError}</div>
         </div>
 
         <div className="mb-3">
@@ -52,6 +70,7 @@ const Update = () => {
             value={email}
             onChange={(e) => setemail(e.target.value)}
           />
+          <div className="text-danger">{emailError}</div>
         </div>
 
         <button
